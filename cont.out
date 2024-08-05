@@ -1,0 +1,69 @@
+
+[info] (Kernel) Interrupt controller: iopic
+[info] (Kernel) Embox kernel start
+[info] (unit) initializing embox.kernel.task.task_resource
+[info] (unit) initializing embox.kernel.task.task_table
+[info] (unit) initializing embox.kernel.task.kernel_task
+[info] (unit) initializing embox.kernel.sched.sched
+[info] (unit) initializing embox.driver.interrupt.ioapic
+[info] (unit) initializing embox.arch.x86.kernel.smp
+[info] (mod) runlevel is 0
+[info] (unit) initializing embox.driver.input.input_dev_nofs
+[info] (unit) initializing embox.mem.static_heap
+[info] (unit) initializing embox.device.char_dev
+[info] (unit) initializing embox.mem.phymem
+[info] (phymem) start=0x01902000 end=0x02100000 size=8380416
+[info] (unit) initializing embox.fs.buffer_cache
+[info] (unit) initializing embox.fs.rootfs_oldfs
+[info] (unit) initializing embox.driver.ide
+[info] (unit) initializing embox.driver.input.i8042
+[info] (unit) initializing embox.driver.pci
+[info] (unit) initializing embox.driver.clock.lapic_timer
+[info] (unit) initializing embox.driver.input.keyboard.i8042_keyboard
+[info] (unit) initializing embox.driver.net.loopback
+[info] (pci) ne2k_pci driver inserted
+[info] (mod) runlevel is 1
+[info] (test) running embox.test.kernel.timer_test
+[info] (test) running embox.test.kernel.periodic_timer_test
+[info] (test) running embox.test.kernel.oneshot_timer_test
+[info] (test) running embox.test.kernel.sched.waitq
+[info] (test) running embox.test.kernel.thread.thread_test
+[info] (test) running embox.test.kernel.thread.thread_running_test
+[info] (test) running embox.test.kernel.lthread.lthread_test
+[info] (test) running embox.test.kernel.lthread.lthread_mutex_test
+[info] (test) running embox.test.kernel.lthread.lthread_sched_wait_test
+[info] (test) running embox.test.kernel.task.multitask_test
+[info] (test) running embox.test.kernel.task.pipe_test
+[info] (test) running embox.test.kernel.task.task
+[info] (test) running embox.test.kernel.task.uid
+[info] (test) running embox.test.kernel.task.select_test
+[info] (test) running embox.test.critical
+[info] (test) running embox.test.recursion
+[info] (test) running embox.test.posix.sleep_test
+[info] (test) running embox.test.stdlib.bsearch_test
+[info] (test) running embox.test.stdlib.qsort_test
+[info] (test) running embox.test.util.array_test
+[info] (test) running embox.test.util.bit_test
+[info] (test) running embox.test.util.slist_test
+[info] (test) running embox.test.util.tree_test
+[info] (unit) initializing embox.driver.tty.serial
+[info] (mod) runlevel is 2
+[info] (unit) initializing embox.init.start_script
+aaaaaaaaaaaaaaaa
+Started shell [tish] on device [ttyS0]
+loading start script:
+> ifconfig lo 127.0.0.1 netmask 255.0.0.0 up 
+> route add 127.0.0.0 netmask 255.0.0.0 lo 
+> ifconfig eth0 10.0.2.16 netmask 255.255.255.0 up 
+eth0: unknown interface
+ifconfig: Command returned with code -19: No such device
+> route add 10.0.2.0 netmask 255.255.255.0 eth0 
+Unknown interface: eth0.
+route: Command returned with code -19: No such device
+> route add default gw 10.0.2.10 eth0 
+Unknown interface: eth0.
+route: Command returned with code -19: No such device
+> date -s 201206011922.40 
+
+2012-06-01 19:22:40
+embox>
