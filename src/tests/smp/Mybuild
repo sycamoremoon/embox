@@ -4,4 +4,5 @@ package embox.test.smp
 @Cmd(name = "test_smp", help="Running multiple cores")
 module test_smp {
     source "test_smp.c"
+	depends embox.compat.posix.proc.vfork
 }

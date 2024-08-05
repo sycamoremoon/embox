@@ -107,7 +107,7 @@ static inline struct dlist_head *dlist_init(struct dlist_head *head) {
  * First of all it examine correct state of the item head and the list head.
  * List head must be in a list but item head not.
  * Then if state is correct it marks the new item head as owned this list.
- * And at the and it add the new element into the list after list head element.
+ * And at the end it add the new element into the list after list head element.
  */
 static inline void dlist_add_next(struct dlist_head *_new,
 		struct dlist_head *list) {

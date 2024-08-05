@@ -12,8 +12,15 @@
 
 #include <kernel/sched/schedee_priority.h>
 #include <kernel/lthread/lthread.h>
+#include <kernel/sched/current.h>
+#include <kernel/printk.h>
+#include <kernel/panic.h>
+#include <kernel/thread.h>
+#include <kernel/task.h>
 
 #include <hal/clock.h>
+
+#include <util/member.h>
 
 #include <framework/mod/options.h>
 
@@ -39,7 +46,9 @@ void jiffies_update(int ticks) {
 	if ((timer_strat_get_next_event(&next_event) == 0) &&
 			(cs_jiffies->event_device->jiffies >= next_event)) {
 		lthread_launch(&clock_handler_lt);
+	}else{
 	}
+
 }
 
 void clock_handle_ticks(void *dev_id, unsigned ticks) {

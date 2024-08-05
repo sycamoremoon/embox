@@ -21,19 +21,20 @@
 #include <kernel/task.h>
 #include <kernel/task/kernel_task.h>
 #include <kernel/thread.h>
+#include <kernel/sched.h>
+#include <kernel/time/clock_source.h>
 
 #include <module/embox/driver/interrupt/lapic.h>
-#include <module/embox/kernel/thread/core.h>
+#include <module/embox/kernel/stack.h>
 
-#define THREAD_STACK_SIZE \
-	OPTION_MODULE_GET(embox__kernel__thread__core, NUMBER, thread_stack_size)
+#define KERNEL_AP_STACK_SZ OPTION_MODULE_GET(embox__kernel__stack, NUMBER, stack_size)
 
 EMBOX_UNIT_INIT(unit_init);
 #define TRAMPOLINE_ADDR 0x20000UL
 extern void idt_load(void);
 
-static char ap_stack[NCPU][THREAD_STACK_SIZE]
-    __attribute__((aligned(THREAD_STACK_SIZE)));
+static char ap_stack[NCPU][KERNEL_AP_STACK_SZ]
+    __attribute__((aligned(KERNEL_AP_STACK_SZ)));
 static int ap_ack;
 static spinlock_t startup_lock = SPIN_STATIC_UNLOCKED;
 
@@ -42,6 +43,7 @@ static void *bs_idle_run(void *arg) {
 }
 
 extern void thread_set_current(struct thread *t);
+extern struct clock_source CLOCK_SOURCE_NAME(lapic_timer);
 
 void startup_ap(void) {
 	struct thread *bs_idle;
@@ -50,9 +52,12 @@ void startup_ap(void) {
 	__spin_lock(&startup_lock);
 
 	idt_load();
-	lapic_enable();
+	apic_init();
+	extern int lapic_clock_setup();
+	lapic_clock_setup();
+	//clock_source_register(&CLOCK_SOURCE_NAME(lapic_timer));
 
-	bs_idle = thread_init_stack(__ap_sp - THREAD_STACK_SIZE, THREAD_STACK_SIZE,
+	bs_idle = thread_init_stack(__ap_sp[cpu_get_id() - 1] - KERNEL_AP_STACK_SZ, KERNEL_AP_STACK_SZ,
 	    SCHED_PRIORITY_MIN, bs_idle_run, NULL);
 	cpu_init(self_id, bs_idle);
 	task_thread_register(task_kernel_task(), bs_idle);
@@ -66,6 +71,7 @@ void startup_ap(void) {
 
 	while (1) {
 		arch_cpu_idle();
+		//schedule();
 	}
 }
 
@@ -81,7 +87,7 @@ static inline void init_trampoline(void) {
 /* TODO: FIX THIS! */
 static inline void cpu_start(int cpu_id) {
 	/* Setting up stack and boot */
-	__ap_sp[cpu_id-1] = ap_stack[cpu_id] + THREAD_STACK_SIZE;
+	__ap_sp[cpu_id - 1] = ap_stack[cpu_id] + KERNEL_AP_STACK_SZ;
 
 	lapic_send_init_ipi(cpu_id);
 

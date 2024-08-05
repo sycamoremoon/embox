@@ -26,7 +26,7 @@
 #define IRQ0               0x0
 #define LAPIC_HZ           1000     /* You can change it */
 
-static int lapic_clock_setup(struct clock_source *cs);
+int lapic_clock_setup(struct clock_source *cs);
 
 static irq_return_t clock_handler(unsigned int irq_nr, void *dev_id) {
 	clock_tick_handler(dev_id);
@@ -61,7 +61,7 @@ int lapic_clock_setup(struct clock_source *cs) {
 	if (initialized) {
 		return ENOERR;
 	}
-	initialized = 1;
+	//initialized = 1;
 
 	/*
 	 * Map APIC timer to an interrupt, and by that enable it in

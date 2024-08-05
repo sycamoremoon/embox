@@ -52,7 +52,7 @@ static int ioapic_enable(void) {
 	if (1 == inited) {
 		return 0;
 	}
-	inited = 1;
+	//inited = 1;
 
 #ifdef IOAPIC_REGS_X86_H_
 	/* I'm not sure that it is correct */
